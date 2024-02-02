@@ -1,15 +1,69 @@
-import React from 'react';
-import { categories } from '../data/data';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
+import { categoryType } from '../data/data';
+import { useNavigate } from 'react-router-dom';
 
 const Category = () => {
+  const [categories, setCategories] = useState<{ [key: string]: categoryType }>(
+    {}
+  );
+  const navigate = useNavigate();
+
+  const { data, isLoading } = useQuery('category', () =>
+    axios.get('https://www.themealdb.com/api/json/v1/1/categories.php')
+  );
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      const newCategories = data.data.categories.reduce(
+        (acc: { [key: string]: categoryType }, category: categoryType) => ({
+          ...acc,
+          [category.idCategory]: { ...category, isClicked: false },
+        }),
+        {}
+      );
+      setCategories(newCategories);
+    }
+  }, [data, isLoading]);
+
+  const handleCategoryClick = (id: number) => {
+    setCategories((prevCategories) => {
+      const updatedCategories: { [key: string]: categoryType } = {
+        ...prevCategories,
+        [id]: {
+          ...prevCategories[id],
+          isClicked: !prevCategories[id].isClicked,
+        },
+      };
+
+      const clickedCategories = Object.values(updatedCategories)
+        .filter((c) => c.isClicked)
+        .map((c) => c.strCategory);
+
+      if (clickedCategories.length > 0) {
+        const queryString = clickedCategories.join('%2C');
+        navigate(`?category=${queryString}`);
+      } else {
+        navigate('/');
+      }
+
+      return updatedCategories;
+    });
+  };
+  if (isLoading) return null;
   return (
     <CategoryContainer>
-      {categories.map((category, index) => {
-        return (
-          <CategoryButton key={index}>{category.strCategory}</CategoryButton>
-        );
-      })}
+      {Object.values(categories).map((category) => (
+        <CategoryButton
+          key={category.idCategory}
+          onClick={() => handleCategoryClick(category.idCategory)}
+          $isClicked={category.isClicked}
+        >
+          {category.strCategory}
+        </CategoryButton>
+      ))}
     </CategoryContainer>
   );
 };
@@ -20,9 +74,9 @@ const CategoryContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const CategoryButton = styled.button`
+const CategoryButton = styled.div<{ $isClicked: boolean }>`
   padding: 8px 16px;
-  background-color: white;
+  background-color: ${(props) => (props.$isClicked ? 'skyblue' : 'white')};
   border-radius: 16px;
   border: 1px solid black;
 `;
