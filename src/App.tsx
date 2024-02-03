@@ -40,50 +40,46 @@ function App() {
   const meals: mealType[] = results
     .filter((result) => !result.isLoading && result.isSuccess)
     .flatMap((result) => result.data || [])
-    .sort((a, b) => b.idMeal - a.idMeal);
+    .map((meal) => ({
+      ...meal,
+      strMeal: meal.strMeal.trimStart(), // strMeal 필드의 앞쪽 공백 제거
+    }));
 
+  // 데이터 로딩 상태 업데이트
+  useEffect(() => {
+    setIsLoading(results.some((result) => result.isLoading));
+  }, [results]);
+
+  // mealsData와 index 상태 업데이트
   useEffect(() => {
     setMealsData(meals);
     if (meals.length === 0) {
       setIndex(0);
-    } else if (index === 0) {
-      setIndex(meals.length >= 20 ? 20 : meals.length);
-    } else if (index > meals.length) {
-      setIndex(meals.length);
+    } else if (index === 0 || index > meals.length) {
+      setIndex(Math.min(20, meals.length));
     }
   }, [meals.length, categories]);
 
+  // 필터에 따른 정렬
   useEffect(() => {
+    const sortedMeals = [...meals];
+
     switch (filter) {
       case 'new':
-        setMealsData((prevMeals) =>
-          [...prevMeals].sort((a, b) => b.idMeal - a.idMeal)
-        );
+        sortedMeals.sort((a, b) => b.idMeal - a.idMeal);
         break;
       case 'asc':
-        setMealsData((prevMeals) =>
-          [...prevMeals].sort((a, b) => a.strMeal.localeCompare(b.strMeal))
-        );
+        sortedMeals.sort((a, b) => a.strMeal.localeCompare(b.strMeal));
         break;
       case 'desc':
-        setMealsData((prevMeals) =>
-          [...prevMeals].sort((a, b) => b.strMeal.localeCompare(a.strMeal))
-        );
+        sortedMeals.sort((a, b) => b.strMeal.localeCompare(a.strMeal));
         break;
       default:
         break;
     }
-  }, [filter]);
 
-  useEffect(() => {
-    const isLoading = results.some((result) => result.isLoading);
-
-    if (isLoading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  }, [results]);
+    setMealsData(sortedMeals);
+  }, [filter, categories, isLoading]);
 
   return (
     <Inner>
