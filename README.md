@@ -7,26 +7,26 @@
 - QueryString을 이용해 카테고리, 필터링 값 저장 및 불러오기
 
 ## 폴더구조
-📦src
- ┣ 📂assets
- ┃ ┗ 📂images
- ┃ ┃ ┗ 📜logo.png
- ┣ 📂component
- ┃ ┣ 📜Category.tsx
- ┃ ┣ 📜Component.tsx
- ┃ ┣ 📜DisplayScreen.tsx
- ┃ ┣ 📜Filter.tsx
- ┃ ┣ 📜Header.tsx
- ┃ ┗ 📜ScrollToTop.tsx
- ┣ 📂hooks
- ┃ ┗ 📜FetchApi.ts
- ┣ 📂store
- ┃ ┣ 📜slice.ts
- ┃ ┗ 📜store.ts
- ┣ 📂type
- ┃ ┗ 📜type.ts
- ┣ 📜App.tsx
- ┣ 📜index.tsx
+📦src  
+ ┣ 📂assets  
+ ┃ ┗ 📂images  
+ ┃ ┃ ┗ 📜logo.png  
+ ┣ 📂component  
+ ┃ ┣ 📜Category.tsx  
+ ┃ ┣ 📜Component.tsx  
+ ┃ ┣ 📜DisplayScreen.tsx  
+ ┃ ┣ 📜Filter.tsx  
+ ┃ ┣ 📜Header.tsx  
+ ┃ ┗ 📜ScrollToTop.tsx  
+ ┣ 📂hooks  
+ ┃ ┗ 📜FetchApi.ts  
+ ┣ 📂store  
+ ┃ ┣ 📜slice.ts  
+ ┃ ┗ 📜store.ts  
+ ┣ 📂type  
+ ┃ ┗ 📜type.ts  
+ ┣ 📜App.tsx  
+ ┣ 📜index.tsx  
 
 ## 사용 라이브러리
 - React v.18.2.0
