@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 
 function App() {
   const [index, setIndex] = useState(0);
+  const [viewCount, setViewCount] = useState(4);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -52,8 +53,17 @@ function App() {
     <Inner>
       <Header />
       <Category />
-      <Filter length={mealData.length} index={index} />
-      <DisplayScreen meals={mealData} setIndex={setIndex} index={index} />
+      <Filter
+        length={mealData.length}
+        index={index}
+        setViewCount={setViewCount}
+      />
+      <DisplayScreen
+        meals={mealData}
+        setIndex={setIndex}
+        index={index}
+        viewCount={viewCount}
+      />
     </Inner>
   );
 }
@@ -66,6 +76,7 @@ const Inner = styled.div`
   margin: 96px auto;
   padding: 24px;
   gap: 48px;
+  box-sizing: border-box;
 
   @media (max-width: 1200px) {
     width: 100%;

@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Filter = ({ length, index }: { length: number; index: number }) => {
+const Filter = ({
+  length,
+  index,
+  setViewCount,
+}: {
+  length: number;
+  index: number;
+  setViewCount: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   return (
     <FilterContainer>
       <p>
-        {index}/{length} 조회
+        {index} / {length} 조회
       </p>
       <FilterButtonContainer>
-        <ListButton str='최신순' />
-        <ListButton str='4개씩 보기' />
+        <SelectSort />
+        <SelectView setViewCount={setViewCount} />
       </FilterButtonContainer>
     </FilterContainer>
   );
@@ -26,23 +35,72 @@ const FilterButtonContainer = styled.div`
   gap: 8px;
 `;
 
-const ListButton = ({ str }: { str: string }) => {
+const SelectSort = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const currentFilter = searchParams.get('filter') || '';
+  const [selectedValue, setSelectedValue] = useState(currentFilter);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedValue(e.target.value);
+    searchParams.set('filter', e.target.value);
+    navigate(`${location.pathname}?${searchParams.toString()}`);
+  };
+
   return (
-    <ListButtonContainer>
-      <p>{str}</p>
-      <p>^</p>
-    </ListButtonContainer>
+    <StyledSelect value={selectedValue} onChange={handleChange}>
+      <StyledOption value='new'>최신 순</StyledOption>
+      <StyledOption value='asc'>이름 오름차순</StyledOption>
+      <StyledOption value='desc'>이름 내림차순</StyledOption>
+    </StyledSelect>
   );
 };
 
-const ListButtonContainer = styled.div`
-  display: flex;
-  width: 96px;
-  justify-content: space-between;
-  border: 1px solid black;
-  padding: 0 16px;
+const SelectView = ({
+  setViewCount,
+}: {
+  setViewCount: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+  const [selectedValue, setSelectedValue] = useState(4);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedValue(parseInt(e.target.value));
+    setViewCount(parseInt(e.target.value));
+  };
+
+  return (
+    <StyledSelect value={selectedValue} onChange={handleChange} $view>
+      <StyledOption value={4}>4개씩 보기</StyledOption>
+      <StyledOption value={2}>2개씩 보기</StyledOption>
+    </StyledSelect>
+  );
+};
+
+const StyledSelect = styled.select<{ $view?: boolean }>`
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
   background-color: white;
-  border-radius: 16px;
+
+  @media (max-width: 1200px) {
+    display: ${(props) => (props.$view ? 'none' : 'block')};
+  }
+
+  &:hover {
+    border-color: #888;
+  }
+
+  &:focus {
+    border-color: #0052cc;
+    outline: none;
+  }
+`;
+
+const StyledOption = styled.option`
+  padding: 10px;
+  width: 96px;
 `;
 
 export default Filter;

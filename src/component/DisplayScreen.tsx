@@ -6,10 +6,12 @@ const DisplayScreen = ({
   meals,
   index,
   setIndex,
+  viewCount,
 }: {
   meals: mealType[];
   index: number;
   setIndex: React.Dispatch<React.SetStateAction<number>>;
+  viewCount: number;
 }) => {
   const [displayMeals, setDisplayMeals] = useState(
     meals.slice(0, length > 20 ? 20 : length)
@@ -45,7 +47,7 @@ const DisplayScreen = ({
   }, [index]);
 
   return (
-    <DisplayScreenContainer>
+    <DisplayScreenContainer $viewCount={viewCount}>
       {displayMeals.map((meal: mealType) => (
         <div key={meal.idMeal}>
           <MealImage
@@ -61,10 +63,10 @@ const DisplayScreen = ({
   );
 };
 
-const DisplayScreenContainer = styled.div`
+const DisplayScreenContainer = styled.div<{ $viewCount: number }>`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: ${(props) => `repeat(${props.$viewCount}, 1fr)`};
+  gap: 16px;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(1, 1fr);
@@ -72,7 +74,7 @@ const DisplayScreenContainer = styled.div`
 `;
 
 const MealImage = styled.img`
-  max-width: 276px;
+  max-width: 100%;
   border-radius: 20px;
 
   @media (max-width: 1200px) {

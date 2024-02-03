@@ -15,12 +15,19 @@ const Category = () => {
     axios.get('https://www.themealdb.com/api/json/v1/1/categories.php')
   );
 
+  const searchParams = new URLSearchParams(location.search);
+  const currentCategory = searchParams.get('category') || '';
+  const currentCategoryArray = currentCategory.split(',');
+
   useEffect(() => {
     if (!isLoading && data) {
       const newCategories = data.data.categories.reduce(
         (acc: { [key: string]: categoryType }, category: categoryType) => ({
           ...acc,
-          [category.idCategory]: { ...category, isClicked: false },
+          [category.idCategory]: {
+            ...category,
+            isClicked: currentCategoryArray.includes(category.strCategory),
+          },
         }),
         {}
       );
@@ -43,8 +50,10 @@ const Category = () => {
         .map((c) => c.strCategory);
 
       if (clickedCategories.length > 0) {
-        const queryString = clickedCategories.join('%2C');
-        navigate(`?category=${queryString}`);
+        const queryString = clickedCategories.join(',');
+
+        searchParams.set('category', queryString);
+        navigate(`${location.pathname}?${searchParams.toString()}`);
       } else {
         navigate('/');
       }
