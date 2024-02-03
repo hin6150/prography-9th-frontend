@@ -89,16 +89,15 @@ const CategoryButton = styled.div<{ $isClicked: boolean }>`
   padding: 8px 16px;
   background-color: ${(props) => (props.$isClicked ? '#cae0f9' : 'white')};
   border-radius: 16px;
-  border: 1px solid ${(props) => (props.$isClicked ? '#cae0f9' : 'white')};
-
   box-shadow:
     0px 4px 6px -1px rgba(0, 0, 0, 0.2),
     0px 2px 4px -1px rgba(0, 0, 0, 0.12);
 
+  transition: transform 0.3s ease;
+
   &:hover {
-    border: 1px solid #ccc;
-    border-color: #888;
     cursor: pointer;
+    transform: scale(1.12);
   }
 `;
 

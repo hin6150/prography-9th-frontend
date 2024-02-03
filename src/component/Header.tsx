@@ -13,6 +13,8 @@ const Header = () => {
 const HeaderContainer = styled.div`
   width: 100%;
   position: fixed;
+  z-index: 5;
+
   left: 0;
   top: 0;
   background-color: white;

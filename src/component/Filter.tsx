@@ -14,7 +14,7 @@ const Filter = ({
   return (
     <FilterContainer>
       <p>
-        {index} / {length} 조회
+        <CountSpan>{index}</CountSpan> / <CountSpan>{length}</CountSpan> 조회
       </p>
       <FilterButtonContainer>
         <SelectSort />
@@ -23,6 +23,10 @@ const Filter = ({
     </FilterContainer>
   );
 };
+
+const CountSpan = styled.span`
+  text-decoration: underline;
+`;
 
 const FilterContainer = styled.div`
   display: flex;

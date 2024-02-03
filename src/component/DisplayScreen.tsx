@@ -54,7 +54,7 @@ const DisplayScreen = ({
         Array.from({ length: 20 }, (_, index) => <SkeletonBox key={index} />)}
 
       {displayMeals.map((meal: mealType) => (
-        <MealContainer key={meal.idMeal}>
+        <MealContainer key={meal.idMeal} $viewCount={viewCount}>
           <MealImage
             loading='lazy'
             src={meal.strMealThumb}
@@ -72,18 +72,21 @@ const DisplayScreen = ({
 const DisplayScreenContainer = styled.div<{ $viewCount: number }>`
   display: grid;
   grid-template-columns: ${(props) => `repeat(${props.$viewCount}, 1fr)`};
-  gap: 16px;
+  gap: 24px;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
   }
 `;
 
-const MealContainer = styled.div`
+const MealContainer = styled.div<{ $viewCount: number }>`
   border-radius: 8px;
 
+  transition: transform 0.3s ease;
   &:hover {
     cursor: pointer;
+    transform: ${(props) =>
+      `scale(${props.$viewCount == 4 ? '1.07' : '1.03'})`};
   }
 `;
 
