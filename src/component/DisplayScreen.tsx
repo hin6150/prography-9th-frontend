@@ -7,11 +7,13 @@ const DisplayScreen = ({
   index,
   setIndex,
   viewCount,
+  isLoading,
 }: {
   meals: mealType[];
   index: number;
   setIndex: React.Dispatch<React.SetStateAction<number>>;
   viewCount: number;
+  isLoading: boolean;
 }) => {
   const [displayMeals, setDisplayMeals] = useState(
     meals.slice(0, length > 20 ? 20 : length)
@@ -48,6 +50,9 @@ const DisplayScreen = ({
 
   return (
     <DisplayScreenContainer $viewCount={viewCount}>
+      {isLoading &&
+        Array.from({ length: 20 }, (_, index) => <SkeletonBox key={index} />)}
+
       {displayMeals.map((meal: mealType) => (
         <div key={meal.idMeal}>
           <MealImage
@@ -58,7 +63,8 @@ const DisplayScreen = ({
           <p>{meal.strMeal}</p>
         </div>
       ))}
-      <div ref={observerRef} />
+
+      <div ref={observerRef} style={{ height: 200 }} />
     </DisplayScreenContainer>
   );
 };
@@ -68,19 +74,21 @@ const DisplayScreenContainer = styled.div<{ $viewCount: number }>`
   grid-template-columns: ${(props) => `repeat(${props.$viewCount}, 1fr)`};
   gap: 16px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
   }
 `;
 
-const MealImage = styled.img`
-  max-width: 100%;
-  border-radius: 20px;
+const SkeletonBox = styled.div`
+  width: 100%;
+  height: 276px;
+  background-color: #eee;
+  border-radius: 8px;
+`;
 
-  @media (max-width: 1200px) {
-    max-width: 100%;
-    width: 100%;
-  }
+const MealImage = styled.img`
+  width: 100%;
+  border-radius: 24px;
 `;
 
 export default DisplayScreen;

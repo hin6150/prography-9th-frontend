@@ -61,18 +61,20 @@ const Category = () => {
       return updatedCategories;
     });
   };
-  if (isLoading) return null;
+
   return (
     <CategoryContainer>
-      {Object.values(categories).map((category) => (
-        <CategoryButton
-          key={category.idCategory}
-          onClick={() => handleCategoryClick(category.idCategory)}
-          $isClicked={category.isClicked}
-        >
-          {category.strCategory}
-        </CategoryButton>
-      ))}
+      {isLoading
+        ? Array.from({ length: 10 }).map((_, index) => <Skeleton key={index} />)
+        : Object.values(categories).map((category) => (
+            <CategoryButton
+              key={category.idCategory}
+              onClick={() => handleCategoryClick(category.idCategory)}
+              $isClicked={category.isClicked}
+            >
+              {category.strCategory}
+            </CategoryButton>
+          ))}
     </CategoryContainer>
   );
 };
@@ -88,6 +90,15 @@ const CategoryButton = styled.div<{ $isClicked: boolean }>`
   background-color: ${(props) => (props.$isClicked ? 'skyblue' : 'white')};
   border-radius: 16px;
   border: 1px solid black;
+`;
+
+const Skeleton = styled.div`
+  padding: 8px 16px;
+  border-radius: 16px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  width: 100px;
+  height: 20px;
 `;
 
 export default Category;

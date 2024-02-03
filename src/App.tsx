@@ -13,6 +13,7 @@ function App() {
   const [index, setIndex] = useState(0);
   const [viewCount, setViewCount] = useState(4);
   const [mealsData, setMealsData] = useState<mealType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -74,6 +75,16 @@ function App() {
     }
   }, [filter]);
 
+  useEffect(() => {
+    const isLoading = results.some((result) => result.isLoading);
+
+    if (isLoading) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [results]);
+
   return (
     <Inner>
       <Header />
@@ -88,6 +99,7 @@ function App() {
         setIndex={setIndex}
         index={index}
         viewCount={viewCount}
+        isLoading={isLoading}
       />
     </Inner>
   );
@@ -103,9 +115,8 @@ const Inner = styled.div`
   gap: 48px;
   box-sizing: border-box;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1280px) {
     width: 100%;
-    box-sizing: border-box;
   }
 `;
 

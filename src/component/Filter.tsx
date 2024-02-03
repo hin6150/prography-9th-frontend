@@ -84,7 +84,7 @@ const StyledSelect = styled.select<{ $view?: boolean }>`
   border: 1px solid #ccc;
   background-color: white;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 768px) {
     display: ${(props) => (props.$view ? 'none' : 'block')};
   }
 
