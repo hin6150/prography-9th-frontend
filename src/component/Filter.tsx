@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Filter = () => {
+const Filter = ({ length, index }: { length: number; index: number }) => {
   return (
     <FilterContainer>
-      <p>0/0 조회</p>
+      <p>
+        {index}/{length} 조회
+      </p>
       <FilterButtonContainer>
         <ListButton str='최신순' />
         <ListButton str='4개씩 보기' />

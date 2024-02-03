@@ -1,17 +1,59 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './component/Header';
 import styled from 'styled-components';
 import Category from './component/Category';
 import Filter from './component/Filter';
 import DisplayScreen from './component/DisplayScreen';
+import { useQueries } from 'react-query';
+import { mealType } from './data/data';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  const [index, setIndex] = useState(0);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categories = queryParams.get('category') || '';
+
+  const fetchMeal = async (category: string) => {
+    const response = await axios.get(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+    );
+    return response.data.meals;
+  };
+
+  const mealQueries = categories.split(',').map((category) => {
+    return {
+      queryKey: ['meal', category],
+      queryFn: () => fetchMeal(category),
+      enabled: !!category,
+    };
+  });
+
+  const results = useQueries(mealQueries);
+
+  const mealData: mealType[] = results
+    .filter((result) => !result.isLoading && result.isSuccess)
+    .flatMap((result) => result.data || []);
+
+  useEffect(() => {
+    if (index === 0) {
+      mealData.length >= 20 ? setIndex(20) : setIndex(mealData.length);
+      return;
+    }
+    if (mealData.length === 0) {
+      setIndex(0);
+      return;
+    }
+  }, [mealData.length]);
+
   return (
     <Inner>
       <Header />
       <Category />
-      <Filter />
-      <DisplayScreen />
+      <Filter length={mealData.length} index={index} />
+      <DisplayScreen meals={mealData} setIndex={setIndex} index={index} />
     </Inner>
   );
 }

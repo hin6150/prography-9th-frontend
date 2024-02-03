@@ -1,46 +1,62 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import { useQueries } from 'react-query';
 import { mealType } from '../data/data';
 
-const DisplayScreen = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const categories = queryParams.get('category') || '';
+const DisplayScreen = ({
+  meals,
+  index,
+  setIndex,
+}: {
+  meals: mealType[];
+  index: number;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+  const [displayMeals, setDisplayMeals] = useState(
+    meals.slice(0, length > 20 ? 20 : length)
+  );
+  const observerRef = useRef(null);
 
-  const fetchMeal = async (category: string) => {
-    const response = await axios.get(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          meals.length >= index + 20
+            ? setIndex((prev) => prev + 20)
+            : setIndex(meals.length);
+        }
+      },
+      { threshold: 1.0 }
     );
-    return response.data.meals;
-  };
 
-  const mealQueries = categories.split(',').map((category) => {
-    return {
-      queryKey: ['meal', category],
-      queryFn: () => fetchMeal(category),
-      enabled: !!category,
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
     };
-  });
+  }, [meals]);
 
-  const results = useQueries(mealQueries);
-
-  const mealData: mealType[] = results
-    .filter((result) => !result.isLoading && result.isSuccess)
-    .flatMap((result) => result.data || []);
+  useEffect(() => {
+    const newDisplayMeals = meals.slice(0, index);
+    setDisplayMeals(newDisplayMeals);
+  }, [index]);
 
   return (
     <DisplayScreenContainer>
-      {mealData?.map((meal: mealType) => {
-        return (
-          <div key={meal.idMeal}>
-            <MealImage src={meal.strMealThumb}></MealImage>
-            <p>{meal.strMeal}</p>
-          </div>
-        );
-      })}
+      {displayMeals.map((meal: mealType) => (
+        <div key={meal.idMeal}>
+          <MealImage
+            loading='lazy'
+            src={meal.strMealThumb}
+            alt={meal.strMeal}
+          />
+          <p>{meal.strMeal}</p>
+        </div>
+      ))}
+      <div ref={observerRef} />
     </DisplayScreenContainer>
   );
 };
