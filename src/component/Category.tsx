@@ -38,7 +38,7 @@ const Category = () => {
     }
   }, [data, isLoading]);
 
-  // 클릭 시, key에 해당하는 value값 수정
+  // 클릭 시, key에 해당하는 value값 수정, QueryString 업데이트
   const handleCategoryClick = (id: number) => {
     setCategories((prevCategories) => {
       const updatedCategories: categoryObjectType = {
@@ -70,17 +70,6 @@ const Category = () => {
     }
     navigate(`${location.pathname}?${searchParams.toString()}`);
   };
-
-  // categories 객체의 변화에 따라 queryString 수정
-  // useEffect(() => {
-  //   const clickedCategories = Object.values(categories)
-  //     .filter((c) => c.isClicked)
-  //     .map((c) => c.strCategory);
-
-  //   const queryString = clickedCategories.join(',');
-  //   searchParams.set('category', queryString);
-  //   navigate(`${location.pathname}?${searchParams.toString()}`);
-  // }, [categories]);
 
   return (
     <CategoryContainer>

@@ -43,23 +43,24 @@ const DisplayScreen = ({ isLoading }: { isLoading: boolean }) => {
   }, [mealsData.length, index]);
 
   return (
-    <DisplayScreenContainer $viewCount={viewCount}>
-      {isLoading &&
-        Array.from({ length: 20 }, (_, index) => <SkeletonBox key={index} />)}
+    <>
+      <DisplayScreenContainer $viewCount={viewCount}>
+        {isLoading &&
+          Array.from({ length: 20 }, (_, index) => <SkeletonBox key={index} />)}
 
-      {mealsData.slice(0, index).map((meal: mealType) => (
-        <MealContainer key={meal.idMeal} $viewCount={viewCount}>
-          <MealImage
-            loading='lazy'
-            src={meal.strMealThumb}
-            alt={meal.strMeal}
-          />
-          <p>{meal.strMeal}</p>
-        </MealContainer>
-      ))}
-
-      <div ref={observerRef} style={{ height: 200 }} />
-    </DisplayScreenContainer>
+        {mealsData.slice(0, index).map((meal: mealType) => (
+          <MealContainer key={meal.idMeal} $viewCount={viewCount}>
+            <MealImage
+              loading='lazy'
+              src={meal.strMealThumb}
+              alt={meal.strMeal}
+            />
+            <p>{meal.strMeal}</p>
+          </MealContainer>
+        ))}
+      </DisplayScreenContainer>
+      <div ref={observerRef} style={{ height: '15vh' }} />
+    </>
   );
 };
 

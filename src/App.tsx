@@ -28,7 +28,7 @@ function App() {
     dispatch(setMealsData(meals));
     if (meals.length === 0) {
       dispatch(setIndex(0));
-    } else if (index > meals.length) {
+    } else if (index < meals.length || index > meals.length) {
       dispatch(setIndex(Math.min(20, meals.length)));
     }
   }, [meals.length, categories]);
