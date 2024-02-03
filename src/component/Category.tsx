@@ -50,22 +50,37 @@ const Category = () => {
       };
       return updatedCategories;
     });
+
+    const categoryToUpdate = categories[id].strCategory;
+
+    if (currentCategoryArray.includes(categoryToUpdate)) {
+      const index = currentCategoryArray.indexOf(categoryToUpdate);
+      if (index > -1) {
+        currentCategoryArray.splice(index, 1);
+      }
+    } else {
+      currentCategoryArray.push(categoryToUpdate);
+    }
+
+    const queryString = currentCategoryArray.join(',');
+    if (queryString !== '') {
+      searchParams.set('category', queryString);
+    } else {
+      searchParams.delete('category');
+    }
+    navigate(`${location.pathname}?${searchParams.toString()}`);
   };
 
   // categories 객체의 변화에 따라 queryString 수정
-  useEffect(() => {
-    const clickedCategories = Object.values(categories)
-      .filter((c) => c.isClicked)
-      .map((c) => c.strCategory);
+  // useEffect(() => {
+  //   const clickedCategories = Object.values(categories)
+  //     .filter((c) => c.isClicked)
+  //     .map((c) => c.strCategory);
 
-    if (clickedCategories.length > 0) {
-      const queryString = clickedCategories.join(',');
-      searchParams.set('category', queryString);
-      navigate(`${location.pathname}?${searchParams.toString()}`);
-    } else {
-      navigate('/');
-    }
-  }, [categories, navigate, location.pathname]);
+  //   const queryString = clickedCategories.join(',');
+  //   searchParams.set('category', queryString);
+  //   navigate(`${location.pathname}?${searchParams.toString()}`);
+  // }, [categories]);
 
   return (
     <CategoryContainer>

@@ -31,6 +31,7 @@ const SelectSort = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  const filter = searchParams.get('filter') || '';
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     searchParams.set('filter', e.target.value);
@@ -38,7 +39,7 @@ const SelectSort = () => {
   };
 
   return (
-    <SelectContainer onChange={handleChange}>
+    <SelectContainer value={filter} onChange={handleChange}>
       <option value='new'>최신 순</option>
       <option value='asc'>이름 오름차순</option>
       <option value='desc'>이름 내림차순</option>
