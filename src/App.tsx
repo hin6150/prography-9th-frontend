@@ -7,6 +7,7 @@ import DisplayScreen from './component/DisplayScreen';
 import { mealType } from './type/type';
 import { useLocation } from 'react-router-dom';
 import { useFetchMeals } from './hooks/FetchApi';
+import ScrollToTop from './component/ScrollToTop';
 
 function App() {
   const [index, setIndex] = useState(0);
@@ -68,6 +69,7 @@ function App() {
         viewCount={viewCount}
         isLoading={isLoading}
       />
+      <ScrollToTop />
     </Inner>
   );
 }

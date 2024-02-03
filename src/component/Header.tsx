@@ -3,9 +3,22 @@ import logoImage from '../assets/images/logo.png';
 import styled from 'styled-components';
 
 const Header = () => {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  };
   return (
     <HeaderContainer>
-      <img src={logoImage} width={120} />
+      <LogoImage
+        src={logoImage}
+        width={120}
+        onClick={() => {
+          scrollToTop();
+        }}
+      />
     </HeaderContainer>
   );
 };
@@ -20,6 +33,12 @@ const HeaderContainer = styled.div`
   background-color: white;
   padding: 24px;
   box-sizing: border-box;
+`;
+
+const LogoImage = styled.img`
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default Header;

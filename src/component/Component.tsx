@@ -88,6 +88,9 @@ export const SkeletonBox = styled.div`
 export const MealImage = styled.img`
   width: 100%;
   border-radius: 24px;
+  box-shadow:
+    0px 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0px 2px 4px -1px rgba(0, 0, 0, 0.12);
 `;
 
 /* Filter.tsx */
