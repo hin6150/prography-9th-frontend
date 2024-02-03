@@ -15,21 +15,3 @@ export interface mealType {
   strMealThumb: string;
   idMeal: number;
 }
-
-export interface displayScreenType {
-  meals: mealType[];
-  index: number;
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
-  viewCount: number;
-  isLoading: boolean;
-}
-
-export interface filterType {
-  length: number;
-  index: number;
-  setViewCount: React.Dispatch<React.SetStateAction<number>>;
-}
-
-export interface selectViewType {
-  setViewCount: React.Dispatch<React.SetStateAction<number>>;
-}

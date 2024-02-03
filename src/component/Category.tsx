@@ -13,13 +13,13 @@ const Category = () => {
   const [categories, setCategories] = useState<categoryObjectType>({});
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery('category', () =>
-    axios.get('https://www.themealdb.com/api/json/v1/1/categories.php')
-  );
-
   const searchParams = new URLSearchParams(location.search);
   const currentCategory = searchParams.get('category') || '';
   const currentCategoryArray = currentCategory.split(',');
+
+  const { data, isLoading } = useQuery('category', () =>
+    axios.get('https://www.themealdb.com/api/json/v1/1/categories.php')
+  );
 
   // 객체로 카테고리 생성
   useEffect(() => {
