@@ -44,23 +44,23 @@ const Category = () => {
           isClicked: !prevCategories[id].isClicked,
         },
       };
-
-      const clickedCategories = Object.values(updatedCategories)
-        .filter((c) => c.isClicked)
-        .map((c) => c.strCategory);
-
-      if (clickedCategories.length > 0) {
-        const queryString = clickedCategories.join(',');
-
-        searchParams.set('category', queryString);
-        navigate(`${location.pathname}?${searchParams.toString()}`);
-      } else {
-        navigate('/');
-      }
-
       return updatedCategories;
     });
   };
+
+  useEffect(() => {
+    const clickedCategories = Object.values(categories)
+      .filter((c) => c.isClicked)
+      .map((c) => c.strCategory);
+
+    if (clickedCategories.length > 0) {
+      const queryString = clickedCategories.join(',');
+      searchParams.set('category', queryString);
+      navigate(`${location.pathname}?${searchParams.toString()}`);
+    } else {
+      navigate('/');
+    }
+  }, [categories, navigate, location.pathname]);
 
   return (
     <CategoryContainer>
