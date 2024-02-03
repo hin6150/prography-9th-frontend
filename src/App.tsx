@@ -4,51 +4,21 @@ import styled from 'styled-components';
 import Category from './component/Category';
 import Filter from './component/Filter';
 import DisplayScreen from './component/DisplayScreen';
-import { useQueries } from 'react-query';
-import { mealType } from './data/data';
-import axios from 'axios';
+import { mealType } from './type/type';
 import { useLocation } from 'react-router-dom';
+import { useFetchMeals } from './hooks/FetchApi';
 
 function App() {
   const [index, setIndex] = useState(0);
   const [viewCount, setViewCount] = useState(4);
   const [mealsData, setMealsData] = useState<mealType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categories = queryParams.get('category') || '';
   const filter = queryParams.get('filter') || '';
 
-  const fetchMeal = async (category: string) => {
-    const response = await axios.get(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
-    );
-    return response.data.meals;
-  };
-
-  const mealQueries = categories.split(',').map((category) => {
-    return {
-      queryKey: ['meal', category],
-      queryFn: () => fetchMeal(category),
-      enabled: !!category,
-    };
-  });
-
-  const results = useQueries(mealQueries);
-
-  const meals: mealType[] = results
-    .filter((result) => !result.isLoading && result.isSuccess)
-    .flatMap((result) => result.data || [])
-    .map((meal) => ({
-      ...meal,
-      strMeal: meal.strMeal.trimStart(), // strMeal 필드의 앞쪽 공백 제거
-    }));
-
-  // 데이터 로딩 상태 업데이트
-  useEffect(() => {
-    setIsLoading(results.some((result) => result.isLoading));
-  }, [results]);
+  const { meals, isLoading } = useFetchMeals(categories);
 
   // mealsData와 index 상태 업데이트
   useEffect(() => {
@@ -60,7 +30,7 @@ function App() {
     }
   }, [meals.length, categories]);
 
-  // 필터에 따른 정렬
+  // 필터링에 따른 정렬
   useEffect(() => {
     const sortedMeals = [...meals];
 

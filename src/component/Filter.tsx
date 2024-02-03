@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { filterType, selectViewType } from '../type/type';
+import {
+  CountSpan,
+  FilterButtonContainer,
+  FilterContainer,
+  SelectContainer,
+} from './Component';
 
-const Filter = ({
-  length,
-  index,
-  setViewCount,
-}: {
-  length: number;
-  index: number;
-  setViewCount: React.Dispatch<React.SetStateAction<number>>;
-}) => {
+const Filter = ({ length, index, setViewCount }: filterType) => {
   return (
     <FilterContainer>
       <p>
@@ -23,21 +21,6 @@ const Filter = ({
     </FilterContainer>
   );
 };
-
-const CountSpan = styled.span`
-  text-decoration: underline;
-`;
-
-const FilterContainer = styled.div`
-  display: flex;
-  height: 32px;
-  justify-content: space-between;
-`;
-
-const FilterButtonContainer = styled.div`
-  display: flex;
-  gap: 8px;
-`;
 
 const SelectSort = () => {
   const navigate = useNavigate();
@@ -61,11 +44,7 @@ const SelectSort = () => {
   );
 };
 
-const SelectView = ({
-  setViewCount,
-}: {
-  setViewCount: React.Dispatch<React.SetStateAction<number>>;
-}) => {
+const SelectView = ({ setViewCount }: selectViewType) => {
   const [selectedValue, setSelectedValue] = useState(4);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -80,25 +59,5 @@ const SelectView = ({
     </SelectContainer>
   );
 };
-
-const SelectContainer = styled.select<{ $view?: boolean }>`
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: white;
-
-  @media (max-width: 768px) {
-    display: ${(props) => (props.$view ? 'none' : 'block')};
-  }
-
-  &:hover {
-    border-color: #888;
-  }
-
-  &:focus {
-    border-color: #0052cc;
-    outline: none;
-  }
-`;
 
 export default Filter;
