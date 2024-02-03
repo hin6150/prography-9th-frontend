@@ -54,14 +54,14 @@ const DisplayScreen = ({
         Array.from({ length: 20 }, (_, index) => <SkeletonBox key={index} />)}
 
       {displayMeals.map((meal: mealType) => (
-        <div key={meal.idMeal}>
+        <MealContainer key={meal.idMeal}>
           <MealImage
             loading='lazy'
             src={meal.strMealThumb}
             alt={meal.strMeal}
           />
           <p>{meal.strMeal}</p>
-        </div>
+        </MealContainer>
       ))}
 
       <div ref={observerRef} style={{ height: 200 }} />
@@ -79,11 +79,31 @@ const DisplayScreenContainer = styled.div<{ $viewCount: number }>`
   }
 `;
 
+const MealContainer = styled.div`
+  border-radius: 8px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 const SkeletonBox = styled.div`
   width: 100%;
   height: 276px;
-  background-color: #eee;
   border-radius: 8px;
+
+  animation: skeletonShine 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+
+  @keyframes skeletonShine {
+    0% {
+      background-position: -200px;
+    }
+    100% {
+      background-position: calc(100% + 200px);
+    }
+  }
 `;
 
 const MealImage = styled.img`
