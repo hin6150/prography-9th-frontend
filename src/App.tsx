@@ -75,6 +75,7 @@ function App() {
         sortedMeals.sort((a, b) => b.strMeal.localeCompare(a.strMeal));
         break;
       default:
+        sortedMeals.sort((a, b) => b.idMeal - a.idMeal);
         break;
     }
 

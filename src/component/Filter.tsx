@@ -44,8 +44,7 @@ const SelectSort = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 
-  const currentFilter = searchParams.get('filter') || '';
-  const [selectedValue, setSelectedValue] = useState(currentFilter);
+  const [selectedValue, setSelectedValue] = useState('new');
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(e.target.value);
@@ -54,11 +53,11 @@ const SelectSort = () => {
   };
 
   return (
-    <StyledSelect value={selectedValue} onChange={handleChange}>
-      <StyledOption value='new'>최신 순</StyledOption>
-      <StyledOption value='asc'>이름 오름차순</StyledOption>
-      <StyledOption value='desc'>이름 내림차순</StyledOption>
-    </StyledSelect>
+    <SelectContainer value={selectedValue} onChange={handleChange}>
+      <option value='new'>최신 순</option>
+      <option value='asc'>이름 오름차순</option>
+      <option value='desc'>이름 내림차순</option>
+    </SelectContainer>
   );
 };
 
@@ -75,14 +74,14 @@ const SelectView = ({
   };
 
   return (
-    <StyledSelect value={selectedValue} onChange={handleChange} $view>
-      <StyledOption value={4}>4개씩 보기</StyledOption>
-      <StyledOption value={2}>2개씩 보기</StyledOption>
-    </StyledSelect>
+    <SelectContainer value={selectedValue} onChange={handleChange} $view>
+      <option value={4}>4개씩 보기</option>
+      <option value={2}>2개씩 보기</option>
+    </SelectContainer>
   );
 };
 
-const StyledSelect = styled.select<{ $view?: boolean }>`
+const SelectContainer = styled.select<{ $view?: boolean }>`
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -100,11 +99,6 @@ const StyledSelect = styled.select<{ $view?: boolean }>`
     border-color: #0052cc;
     outline: none;
   }
-`;
-
-const StyledOption = styled.option`
-  padding: 10px;
-  width: 96px;
 `;
 
 export default Filter;
