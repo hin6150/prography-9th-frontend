@@ -39,12 +39,12 @@ const DisplayScreen = ({
         observer.unobserve(observerRef.current);
       }
     };
-  }, [meals]);
+  }, [meals.length, index]);
 
   useEffect(() => {
     const newDisplayMeals = meals.slice(0, index);
     setDisplayMeals(newDisplayMeals);
-  }, [index]);
+  }, [index, meals]);
 
   return (
     <DisplayScreenContainer $viewCount={viewCount}>

@@ -12,10 +12,12 @@ import { useLocation } from 'react-router-dom';
 function App() {
   const [index, setIndex] = useState(0);
   const [viewCount, setViewCount] = useState(4);
+  const [mealsData, setMealsData] = useState<mealType[]>([]);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categories = queryParams.get('category') || '';
+  const filter = queryParams.get('filter') || '';
 
   const fetchMeal = async (category: string) => {
     const response = await axios.get(
@@ -34,32 +36,55 @@ function App() {
 
   const results = useQueries(mealQueries);
 
-  const mealData: mealType[] = results
+  const meals: mealType[] = results
     .filter((result) => !result.isLoading && result.isSuccess)
-    .flatMap((result) => result.data || []);
+    .flatMap((result) => result.data || [])
+    .sort((a, b) => b.idMeal - a.idMeal);
 
   useEffect(() => {
-    if (index === 0) {
-      mealData.length >= 20 ? setIndex(20) : setIndex(mealData.length);
-      return;
-    }
-    if (mealData.length === 0) {
+    setMealsData(meals);
+    if (meals.length === 0) {
       setIndex(0);
-      return;
+    } else if (index === 0) {
+      setIndex(meals.length >= 20 ? 20 : meals.length);
+    } else if (index > meals.length) {
+      setIndex(meals.length);
     }
-  }, [mealData.length]);
+  }, [meals.length, categories]);
+
+  useEffect(() => {
+    switch (filter) {
+      case 'new':
+        setMealsData((prevMeals) =>
+          [...prevMeals].sort((a, b) => b.idMeal - a.idMeal)
+        );
+        break;
+      case 'asc':
+        setMealsData((prevMeals) =>
+          [...prevMeals].sort((a, b) => a.strMeal.localeCompare(b.strMeal))
+        );
+        break;
+      case 'desc':
+        setMealsData((prevMeals) =>
+          [...prevMeals].sort((a, b) => b.strMeal.localeCompare(a.strMeal))
+        );
+        break;
+      default:
+        break;
+    }
+  }, [filter]);
 
   return (
     <Inner>
       <Header />
       <Category />
       <Filter
-        length={mealData.length}
+        length={mealsData.length}
         index={index}
         setViewCount={setViewCount}
       />
       <DisplayScreen
-        meals={mealData}
+        meals={mealsData}
         setIndex={setIndex}
         index={index}
         viewCount={viewCount}
