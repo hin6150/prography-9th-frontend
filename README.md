@@ -5,6 +5,7 @@
 - 필터링을 통한 Sort 적용하기
 - 무한 스크롤을 이용해 20개씩 불러오기
 - QueryString을 이용해 카테고리, 필터링 값 저장 및 불러오기
+- Mobile 반응형 구현하기
 
 ## 폴더구조
 📦src  
@@ -35,6 +36,7 @@
 - RestApi: React-Query, Axios
 - Global State: Redux-Tool-Kit
 - etc: Prettier, EsLint
+- CommitRule: gitmoji
 
 ## 작업 내용
 ### App.tsx
