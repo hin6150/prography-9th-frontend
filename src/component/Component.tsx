@@ -56,7 +56,11 @@ export const DisplayScreenContainer = styled.div<{ $viewCount: number }>`
 `;
 
 export const MealContainer = styled.div<{ $viewCount: number }>`
+  display: flex;
+  flex-direction: column;
   border-radius: 8px;
+  gap: 16px;
+  margin-bottom: 8px;
 
   transition: transform 0.3s ease;
   &:hover {
@@ -85,12 +89,14 @@ export const SkeletonBox = styled.div`
   }
 `;
 
-export const MealImage = styled.img`
+export const MealImage = styled.img<{ $isLoading?: boolean }>`
   width: 100%;
+  height: 100%;
   border-radius: 24px;
   box-shadow:
     0px 4px 6px -1px rgba(0, 0, 0, 0.2),
     0px 2px 4px -1px rgba(0, 0, 0, 0.12);
+  background-color: ${(props) => (props.$isLoading ? '#ccc' : 'transparent')};
 `;
 
 /* Filter.tsx */

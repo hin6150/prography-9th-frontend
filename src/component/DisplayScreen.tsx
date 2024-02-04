@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { mealType } from '../type/type';
 import {
   DisplayScreenContainer,
@@ -47,14 +47,10 @@ const DisplayScreen = ({ isLoading }: { isLoading: boolean }) => {
       <DisplayScreenContainer $viewCount={viewCount}>
         {isLoading &&
           Array.from({ length: 20 }, (_, index) => <SkeletonBox key={index} />)}
-
+        {mealsData.length === 0 && <div>카테고리를 선택해주세요!</div>}
         {mealsData.slice(0, index).map((meal: mealType) => (
           <MealContainer key={meal.idMeal} $viewCount={viewCount}>
-            <MealImage
-              loading='lazy'
-              src={meal.strMealThumb}
-              alt={meal.strMeal}
-            />
+            <LazyImage meal={meal} />
             <p>{meal.strMeal}</p>
           </MealContainer>
         ))}
@@ -64,4 +60,32 @@ const DisplayScreen = ({ isLoading }: { isLoading: boolean }) => {
   );
 };
 
+const LazyImage = ({ meal }: { meal: mealType }) => {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setLoaded(true);
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(imgRef.current!);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <MealImage
+      ref={imgRef}
+      src={loaded ? meal.strMealThumb : undefined}
+      alt={meal.strMeal}
+      $isLoading={!loaded}
+    />
+  );
+};
 export default DisplayScreen;
